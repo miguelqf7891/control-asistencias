@@ -519,7 +519,7 @@ class AttendanceController extends Controller
             $sheet->setCellValue('A' . $currentRow, '_________________________________________');
             $sheet->mergeCells('A' . $currentRow . ':J' . $currentRow);
             $currentRow++;
-            $sheet->setCellValue('A' . $currentRow, strtoupper(auth()->user()->name ?? 'RESPONSABLE'));
+         
             $sheet->mergeCells('A' . $currentRow . ':J' . $currentRow);
             $sheet->getStyle('A' . $currentRow)->getAlignment()->setHorizontal(Alignment::HORIZONTAL_CENTER);
             $currentRow++;
