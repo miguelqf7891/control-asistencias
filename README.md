@@ -1,59 +1,134 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🏗️ ARQUITECTURA MVC - SISTEMA DE ASISTENCIAS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## 📊 Diagrama de Flujo MVC
+┌─────────────────────────────────────────────────────────────┐
+│ USUARIO FINAL │
+│ (Recursos Humanos) │
+└─────────────────────────────────────────────────────────────┘
+│
+▼
+┌─────────────────────────────────────────────────────────────┐
+│ VISTAS (Views) │
+│ • Tabla de asistencias │
+│ • Formulario de reportes │
+│ • Importación CSV │
+│ • Gestión de horarios │
+└─────────────────────────────────────────────────────────────┘
+│
+▼
+┌─────────────────────────────────────────────────────────────┐
+│ CONTROLADORES (Controllers) │
+│ • AttendanceController → Lógica de asistencias │
+│ • ImportCsvController → Importación de CSV │
+│ • EmployeeShiftController → Gestión de horarios │
+└─────────────────────────────────────────────────────────────┘
+│
+▼
+┌─────────────────────────────────────────────────────────────┐
+│ MODELOS (Models) │
+│ • Employee → Empleados y sus horarios │
+│ • AttendanceRecord → Registros y cálculos │
+└─────────────────────────────────────────────────────────────┘
+│
+▼
+┌─────────────────────────────────────────────────────────────┐
+│ BASE DE DATOS (MySQL) │
+│ • employees → Datos de empleados │
+│ • attendance_records → Marcaciones biométricas │
+└─────────────────────────────────────────────────────────────┘
 
-## About Laravel
+## 📁 Estructura de Carpetas y Explicación
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### 1. `app/Http/Controllers/` - Los Controladores (La Lógica)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+```php
+// Cada controlador maneja una funcionalidad específica:
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+AttendanceController.php      → Muestra asistencias y genera reportes
+ImportCsvController.php       → Lee archivos CSV y guarda en BD
+EmployeeShiftController.php   → Asigna horarios a empleados
+ProfileController.php         → Perfil de usuario (Laravel Breeze)
+Controller.php                → Controlador base (vacío)
 
-## Learning Laravel
+2. app/Models/ - Los Modelos (Los Datos)
+php
+Employee.php           → Representa un empleado (nombre, número, horario)
+AttendanceRecord.php   → Representa una marcación (fecha, hora, tipo)
+User.php              → Usuario del sistema (login)
+Relaciones:
+Un Employee tiene muchos AttendanceRecord
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Cada AttendanceRecord pertenece a un Employee
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+resources/views/ - Las Vistas (Lo que ve el usuario)
+text
+layouts/
+├── app.blade.php        → Plantilla principal con menú
+├── guest.blade.php      → Plantilla para páginas públicas (login)
+└── navigation.blade.php → Menú de navegación
 
-## Laravel Sponsors
+attendance/
+├── index.blade.php      → Tabla de asistencias (página principal)
+├── report.blade.php     → Formulario y resultados de reportes
+└── debug.blade.php      → Para depuración (temporal)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+employees/
+├── index.blade.php      → Lista de empleados con sus horarios
+└── shifts.blade.php     → Formulario para asignar turnos
 
-### Premium Partners
+auth/
+├── login.blade.php           → Pantalla de inicio de sesión
+├── register.blade.php        → Registro de usuarios
+├── forgot-password.blade.php → Recuperar contraseña
+├── reset-password.blade.php  → Restablecer contraseña
+└── confirm-password.blade.php → Confirmar contraseña
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+import-csv.blade.php     → Formulario para subir archivos CSV
 
-## Contributing
+📝 Tecnologías Utilizadas
+Backend: Laravel (PHP)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+Frontend: Blade Templates, Bootstrap
 
-## Code of Conduct
+Base de Datos: MySQL
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+Autenticación: Laravel Breeze
 
-## Security Vulnerabilities
+ CÓMO EJECUTAR ESTE PROYECTO LARAVEL DESDE CERO
+📋 Requisitos Previos
+Asegúrate de tener instalado:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Requisito	Versión	Comando para verificar
+PHP	>= 8.1	php -v
+Composer	Última	composer --version
+MySQL	>= 5.7	mysql --version
+Node.js	>= 16.x	node -v
+NPM	Última	npm -v
+🔧 Paso a Paso
+1. Clonar o Crear el Proyecto
+bash
+# Opción A: Si tienes el código en un repositorio
+git clone <url-del-repositorio>
+cd nombre-del-proyecto
 
-## License
+# Opción B: Crear un nuevo proyecto Laravel
+composer create-project laravel/laravel sistema-asistencias
+cd sistema-asistencias
+2. Instalar Dependencias
+bash
+# Instalar dependencias de PHP
+composer install
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+# Instalar Laravel Breeze (autenticación)
+composer require laravel/breeze --dev
+
+# Instalar Breeze con Blade
+php artisan breeze:install blade
+
+# Instalar dependencias de Node.js
+npm install
+
+# Compilar assets (CSS, JS)
+npm run build
+# O para desarrollo con watch:
+npm run dev
